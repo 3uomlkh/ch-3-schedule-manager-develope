@@ -46,4 +46,9 @@ public class MemberService {
         }
         member.updateUsername(dto.getUsername());
     }
+
+    public void delete(Long id) {
+        Member member = memberRepository.findByIdOrElseThrow(id);
+        memberRepository.delete(member);
+    }
 }
