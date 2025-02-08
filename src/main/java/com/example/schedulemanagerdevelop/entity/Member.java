@@ -17,7 +17,7 @@ public class Member extends BaseEntity {
     private Long id;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false, unique = true)
