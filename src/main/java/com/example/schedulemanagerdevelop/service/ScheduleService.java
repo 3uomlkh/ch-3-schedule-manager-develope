@@ -39,4 +39,9 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
         return new ScheduleResponseDto(schedule.getId(), schedule.getTitle(), schedule.getContents());
     }
+
+    public void delete(Long id) {
+        Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
+        scheduleRepository.delete(schedule);
+    }
 }
