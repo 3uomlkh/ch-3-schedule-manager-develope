@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findMemberByUsername(String username);
+    Optional<Member> findByEmail(String email);
 
     default Member findMemberByUsernameOrElseThrow(String username) {
         return findMemberByUsername(username)
@@ -19,5 +20,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     default Member findByIdOrElseThrow(Long id) {
         return findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exists id = " + id));
+    }
+
+    default Member findByEmailOrElseThrow(String email) {
+        return findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exists email = " + email));
     }
 }

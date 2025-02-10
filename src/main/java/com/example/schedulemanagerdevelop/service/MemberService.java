@@ -51,4 +51,12 @@ public class MemberService {
         Member member = memberRepository.findByIdOrElseThrow(id);
         memberRepository.delete(member);
     }
+
+    public MemberResponseDto authenticate(String email, String password) {
+        Member member = memberRepository.findByEmailOrElseThrow(email);
+        if (!member.getPassword().equals(password)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+        }
+        return new MemberResponseDto(member);
+    }
 }
