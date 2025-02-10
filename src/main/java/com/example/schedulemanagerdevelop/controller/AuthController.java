@@ -40,4 +40,13 @@ public class AuthController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); // 세션 무효화 (로그아웃 처리)
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
