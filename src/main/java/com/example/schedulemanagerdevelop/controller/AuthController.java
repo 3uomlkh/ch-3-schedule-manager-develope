@@ -33,7 +33,7 @@ public class AuthController {
             @RequestBody LoginRequestDto dto,
             HttpServletRequest request
     ) {
-        MemberResponseDto memberResponseDto = memberService.authenticate(dto.getEmail(), dto.getPassword());
+        MemberResponseDto memberResponseDto = memberService.authenticate(dto);
 
         HttpSession session = request.getSession(true);
         session.setAttribute("sessionKey", memberResponseDto.getEmail());

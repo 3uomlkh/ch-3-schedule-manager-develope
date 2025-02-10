@@ -1,5 +1,6 @@
 package com.example.schedulemanagerdevelop.service;
 
+import com.example.schedulemanagerdevelop.config.PasswordEncoder;
 import com.example.schedulemanagerdevelop.dto.CreateScheduleRequestDto;
 import com.example.schedulemanagerdevelop.dto.ScheduleResponseDto;
 import com.example.schedulemanagerdevelop.dto.UpdateScheduleRequestDto;
@@ -21,6 +22,7 @@ public class ScheduleService {
 
     private final MemberRepository memberRepository;
     private final ScheduleRepository scheduleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public ScheduleResponseDto save(CreateScheduleRequestDto dto) {
         Member member = memberRepository.findMemberByUsernameOrElseThrow(dto.getUsername());
@@ -53,7 +55,8 @@ public class ScheduleService {
     public void update(Long id, UpdateScheduleRequestDto dto) {
         Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
         // 비밀번호 검증
-        if (!dto.getPassword().equals(schedule.getMember().getPassword())) {
+        boolean isMatch = passwordEncoder.matches(dto.getPassword(), schedule.getMember().getPassword());
+        if (!isMatch) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
         }
 
