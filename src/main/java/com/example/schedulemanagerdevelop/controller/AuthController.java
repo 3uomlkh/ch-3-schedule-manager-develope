@@ -7,6 +7,7 @@ import com.example.schedulemanagerdevelop.dto.SignUpResponseDto;
 import com.example.schedulemanagerdevelop.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +24,14 @@ public class AuthController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SignUpResponseDto> signUp(@RequestBody SignUpRequestDto dto) {
+    public ResponseEntity<SignUpResponseDto> signUp(@Valid @RequestBody SignUpRequestDto dto) {
         SignUpResponseDto signUpResponseDto = memberService.signUp(dto);
         return new ResponseEntity<>(signUpResponseDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(
-            @RequestBody LoginRequestDto dto,
+            @Valid @RequestBody LoginRequestDto dto,
             HttpServletRequest request
     ) {
         MemberResponseDto memberResponseDto = memberService.authenticate(dto);

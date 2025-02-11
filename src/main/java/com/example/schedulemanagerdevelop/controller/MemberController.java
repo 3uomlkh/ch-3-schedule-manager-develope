@@ -4,6 +4,7 @@ import com.example.schedulemanagerdevelop.dto.MemberResponseDto;
 import com.example.schedulemanagerdevelop.dto.UpdatePasswordRequestDto;
 import com.example.schedulemanagerdevelop.dto.UpdateUsernameRequestDto;
 import com.example.schedulemanagerdevelop.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class MemberController {
     @PatchMapping("/{id}/username")
     public ResponseEntity<Void> updateUsername(
             @PathVariable Long id,
-            @RequestBody UpdateUsernameRequestDto dto
+            @Valid @RequestBody UpdateUsernameRequestDto dto
     ) {
         memberService.updateUsername(id, dto);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -34,7 +35,7 @@ public class MemberController {
     @PatchMapping("/{id}/password")
     public ResponseEntity<Void> updatePassword(
             @PathVariable Long id,
-            @RequestBody UpdatePasswordRequestDto dto
+            @Valid @RequestBody UpdatePasswordRequestDto dto
     ) {
         memberService.updatePassword(id, dto);
         return new ResponseEntity<>(HttpStatus.OK);
