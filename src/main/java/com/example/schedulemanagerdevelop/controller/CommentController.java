@@ -5,6 +5,7 @@ import com.example.schedulemanagerdevelop.dto.response.CommentResponseDto;
 import com.example.schedulemanagerdevelop.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class CommentController {
     @PostMapping("/schedules/{id}/comments")
     public ResponseEntity<CommentResponseDto> save(
             @PathVariable Long id,
-            @RequestBody CommentRequestDto dto,
+            @Valid @RequestBody CommentRequestDto dto,
             HttpServletRequest request
     ) {
         // 현재 로그인 된 유저의 세션키 가져오기
@@ -43,7 +44,7 @@ public class CommentController {
     @PatchMapping("/comments/{id}")
     public ResponseEntity<CommentResponseDto> update(
             @PathVariable Long id,
-            @RequestBody CommentRequestDto dto,
+            @Valid @RequestBody CommentRequestDto dto,
             HttpServletRequest request
     ) {
         // 현재 로그인 된 유저의 세션키 가져오기
