@@ -8,4 +8,5 @@ public class CommentRequestDto {
 
     @NotBlank
     private String contents;
+
 }
