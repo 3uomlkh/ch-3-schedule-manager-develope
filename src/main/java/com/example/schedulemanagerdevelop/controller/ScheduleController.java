@@ -1,11 +1,15 @@
 package com.example.schedulemanagerdevelop.controller;
 
 import com.example.schedulemanagerdevelop.dto.CreateScheduleRequestDto;
+import com.example.schedulemanagerdevelop.dto.PagedScheduleResponseDto;
 import com.example.schedulemanagerdevelop.dto.ScheduleResponseDto;
 import com.example.schedulemanagerdevelop.dto.UpdateScheduleRequestDto;
 import com.example.schedulemanagerdevelop.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,10 +29,20 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleResponseDto, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<ScheduleResponseDto>> findAll() {
         List<ScheduleResponseDto> scheduleResponseDtoList = scheduleService.findAll();
         return new ResponseEntity<>(scheduleResponseDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<Page<PagedScheduleResponseDto>> findAllWithPagination(
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
+        PageRequest pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        Page<PagedScheduleResponseDto> pagedScheduleResponseDto = scheduleService.findAllWithPagination(pageable);
+        return new ResponseEntity<>(pagedScheduleResponseDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

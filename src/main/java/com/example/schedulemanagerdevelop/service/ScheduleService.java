@@ -2,6 +2,7 @@ package com.example.schedulemanagerdevelop.service;
 
 import com.example.schedulemanagerdevelop.config.PasswordEncoder;
 import com.example.schedulemanagerdevelop.dto.CreateScheduleRequestDto;
+import com.example.schedulemanagerdevelop.dto.PagedScheduleResponseDto;
 import com.example.schedulemanagerdevelop.dto.ScheduleResponseDto;
 import com.example.schedulemanagerdevelop.dto.UpdateScheduleRequestDto;
 import com.example.schedulemanagerdevelop.entity.Member;
@@ -9,6 +10,8 @@ import com.example.schedulemanagerdevelop.entity.Schedule;
 import com.example.schedulemanagerdevelop.repository.MemberRepository;
 import com.example.schedulemanagerdevelop.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +42,11 @@ public class ScheduleService {
                 .stream()
                 .map(ScheduleResponseDto::toDto)
                 .toList();
+    }
+
+    public Page<PagedScheduleResponseDto> findAllWithPagination(Pageable pageable) {
+        return scheduleRepository.findAll(pageable)
+                .map(PagedScheduleResponseDto::toDto);
     }
 
     public ScheduleResponseDto findbyId(Long id) {
