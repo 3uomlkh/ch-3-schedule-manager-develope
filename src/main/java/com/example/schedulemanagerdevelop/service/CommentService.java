@@ -8,6 +8,7 @@ import com.example.schedulemanagerdevelop.entity.Schedule;
 import com.example.schedulemanagerdevelop.exception.custom.CommentNotFoundException;
 import com.example.schedulemanagerdevelop.exception.custom.ScheduleNotFoundException;
 import com.example.schedulemanagerdevelop.exception.custom.SessionNotFoundException;
+import com.example.schedulemanagerdevelop.exception.custom.UnauthorizedActionException;
 import com.example.schedulemanagerdevelop.repository.CommentRepository;
 import com.example.schedulemanagerdevelop.repository.MemberRepository;
 import com.example.schedulemanagerdevelop.repository.ScheduleRepository;
@@ -58,7 +59,7 @@ public class CommentService {
 
         // 같은 유저인지 세션키로 확인 후 수정
         if (!comment.getMember().getEmail().equals(sessionKey)) {
-            throw new SessionNotFoundException();
+            throw new UnauthorizedActionException();
         }
 
         comment.updateContents(dto.getContents());
@@ -74,7 +75,7 @@ public class CommentService {
 
         // 같은 유저인지 세션키로 확인 후 삭제
         if (!comment.getMember().getEmail().equals(sessionKey)) {
-            throw new SessionNotFoundException();
+            throw new UnauthorizedActionException();
         }
 
         commentRepository.delete(comment);
