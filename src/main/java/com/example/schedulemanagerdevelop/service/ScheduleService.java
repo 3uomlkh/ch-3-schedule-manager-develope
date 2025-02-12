@@ -22,12 +22,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ScheduleService {
 
     private final MemberRepository memberRepository;
     private final ScheduleRepository scheduleRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public ScheduleResponseDto save(CreateScheduleRequestDto dto, String sessionKey) {
         Member member = memberRepository.findByEmail(sessionKey)
                 .orElseThrow(SessionNotFoundException::new);
@@ -58,6 +60,7 @@ public class ScheduleService {
         return new ScheduleResponseDto(schedule.getId(), schedule.getTitle(), schedule.getContents());
     }
 
+    @Transactional
     public void delete(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(ScheduleNotFoundException::new);
