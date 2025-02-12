@@ -7,7 +7,7 @@ import lombok.Getter;
 public class SignUpRequestDto {
 
     @NotBlank(message = "이름은 필수값입니다.")
-    @Max(value = 8, message = "이름은 8자 이내여야 합니다.")
+    @Size(min = 1, max = 8, message = "이름은 8자 이내여야 합니다.")
     private final String username;
 
     @NotBlank(message = "이메일은 필수값입니다.")
