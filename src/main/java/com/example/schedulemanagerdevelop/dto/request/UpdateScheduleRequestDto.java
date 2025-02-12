@@ -1,4 +1,4 @@
-package com.example.schedulemanagerdevelop.dto;
+package com.example.schedulemanagerdevelop.dto.request;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;

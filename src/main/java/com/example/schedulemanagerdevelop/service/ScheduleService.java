@@ -1,10 +1,10 @@
 package com.example.schedulemanagerdevelop.service;
 
 import com.example.schedulemanagerdevelop.config.PasswordEncoder;
-import com.example.schedulemanagerdevelop.dto.CreateScheduleRequestDto;
-import com.example.schedulemanagerdevelop.dto.PagedScheduleResponseDto;
-import com.example.schedulemanagerdevelop.dto.ScheduleResponseDto;
-import com.example.schedulemanagerdevelop.dto.UpdateScheduleRequestDto;
+import com.example.schedulemanagerdevelop.dto.request.CreateScheduleRequestDto;
+import com.example.schedulemanagerdevelop.dto.response.PagedScheduleResponseDto;
+import com.example.schedulemanagerdevelop.dto.response.ScheduleResponseDto;
+import com.example.schedulemanagerdevelop.dto.request.UpdateScheduleRequestDto;
 import com.example.schedulemanagerdevelop.entity.Member;
 import com.example.schedulemanagerdevelop.entity.Schedule;
 import com.example.schedulemanagerdevelop.repository.MemberRepository;

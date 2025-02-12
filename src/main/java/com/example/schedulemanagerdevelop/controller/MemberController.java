@@ -1,8 +1,8 @@
 package com.example.schedulemanagerdevelop.controller;
 
-import com.example.schedulemanagerdevelop.dto.MemberResponseDto;
-import com.example.schedulemanagerdevelop.dto.UpdatePasswordRequestDto;
-import com.example.schedulemanagerdevelop.dto.UpdateUsernameRequestDto;
+import com.example.schedulemanagerdevelop.dto.response.MemberResponseDto;
+import com.example.schedulemanagerdevelop.dto.request.UpdatePasswordRequestDto;
+import com.example.schedulemanagerdevelop.dto.request.UpdateUsernameRequestDto;
 import com.example.schedulemanagerdevelop.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.example.schedulemanagerdevelop.controller;
 
-import com.example.schedulemanagerdevelop.dto.CommentRequestDto;
-import com.example.schedulemanagerdevelop.dto.CommentResponseDto;
+import com.example.schedulemanagerdevelop.dto.request.CommentRequestDto;
+import com.example.schedulemanagerdevelop.dto.response.CommentResponseDto;
 import com.example.schedulemanagerdevelop.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

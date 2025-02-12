@@ -1,7 +1,12 @@
 package com.example.schedulemanagerdevelop.service;
 
 import com.example.schedulemanagerdevelop.config.PasswordEncoder;
-import com.example.schedulemanagerdevelop.dto.*;
+import com.example.schedulemanagerdevelop.dto.request.LoginRequestDto;
+import com.example.schedulemanagerdevelop.dto.request.SignUpRequestDto;
+import com.example.schedulemanagerdevelop.dto.request.UpdatePasswordRequestDto;
+import com.example.schedulemanagerdevelop.dto.request.UpdateUsernameRequestDto;
+import com.example.schedulemanagerdevelop.dto.response.MemberResponseDto;
+import com.example.schedulemanagerdevelop.dto.response.SignUpResponseDto;
 import com.example.schedulemanagerdevelop.entity.Member;
 import com.example.schedulemanagerdevelop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

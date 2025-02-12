@@ -1,9 +1,9 @@
 package com.example.schedulemanagerdevelop.controller;
 
-import com.example.schedulemanagerdevelop.dto.LoginRequestDto;
-import com.example.schedulemanagerdevelop.dto.MemberResponseDto;
-import com.example.schedulemanagerdevelop.dto.SignUpRequestDto;
-import com.example.schedulemanagerdevelop.dto.SignUpResponseDto;
+import com.example.schedulemanagerdevelop.dto.request.LoginRequestDto;
+import com.example.schedulemanagerdevelop.dto.response.MemberResponseDto;
+import com.example.schedulemanagerdevelop.dto.request.SignUpRequestDto;
+import com.example.schedulemanagerdevelop.dto.response.SignUpResponseDto;
 import com.example.schedulemanagerdevelop.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

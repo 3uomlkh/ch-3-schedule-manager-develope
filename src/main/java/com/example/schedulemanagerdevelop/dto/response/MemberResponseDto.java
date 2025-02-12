@@ -1,16 +1,14 @@
-package com.example.schedulemanagerdevelop.dto;
+package com.example.schedulemanagerdevelop.dto.response;
 
 import com.example.schedulemanagerdevelop.entity.Member;
 import lombok.Getter;
 
 @Getter
-public class SignUpResponseDto {
-    private final Long id;
+public class MemberResponseDto {
     private final String username;
     private final String email;
 
-    public SignUpResponseDto(Member member) {
-        this.id = member.getId();
+    public MemberResponseDto(Member member) {
         this.username = member.getUsername();
         this.email = member.getEmail();
     }

@@ -1,4 +1,4 @@
-package com.example.schedulemanagerdevelop.dto;
+package com.example.schedulemanagerdevelop.dto.response;
 
 import com.example.schedulemanagerdevelop.entity.Comment;
 import lombok.Getter;
