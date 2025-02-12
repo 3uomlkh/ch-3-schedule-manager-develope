@@ -1,9 +1,7 @@
 package com.example.schedulemanagerdevelop.exception.handler;
 
 import com.example.schedulemanagerdevelop.exception.ErrorResponse;
-import com.example.schedulemanagerdevelop.exception.custom.IncorrectPasswordException;
-import com.example.schedulemanagerdevelop.exception.custom.ScheduleNotFoundException;
-import com.example.schedulemanagerdevelop.exception.custom.SessionNotFoundException;
+import com.example.schedulemanagerdevelop.exception.custom.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,5 +26,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> IncorrectPasswordException(IncorrectPasswordException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> UserNotFoundException(UserNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    public ResponseEntity<ErrorResponse> EmailNotFoundException(EmailNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage()));
     }
 }

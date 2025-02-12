@@ -8,20 +8,23 @@ import com.example.schedulemanagerdevelop.dto.request.UpdateUsernameRequestDto;
 import com.example.schedulemanagerdevelop.dto.response.MemberResponseDto;
 import com.example.schedulemanagerdevelop.dto.response.SignUpResponseDto;
 import com.example.schedulemanagerdevelop.entity.Member;
+import com.example.schedulemanagerdevelop.exception.custom.EmailNotFoundException;
+import com.example.schedulemanagerdevelop.exception.custom.IncorrectPasswordException;
+import com.example.schedulemanagerdevelop.exception.custom.UserNotFoundException;
 import com.example.schedulemanagerdevelop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public SignUpResponseDto signUp(SignUpRequestDto dto) {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
@@ -33,17 +36,20 @@ public class MemberService {
     }
 
     public MemberResponseDto findById(Long id) {
-        Member member = memberRepository.findByIdOrElseThrow(id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+
         return new MemberResponseDto(member);
     }
 
     @Transactional
     public void updatePassword(Long id, UpdatePasswordRequestDto dto) {
-        Member member = memberRepository.findByIdOrElseThrow(id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
         boolean isMatch = passwordEncoder.matches(dto.getOldPassword(), member.getPassword());
 
         if (!isMatch) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+            throw new IncorrectPasswordException();
         }
 
         member.updatePassword(dto.getNewPassword());
@@ -51,31 +57,32 @@ public class MemberService {
 
     @Transactional
     public void updateUsername(Long id, UpdateUsernameRequestDto dto) {
-        Member member = memberRepository.findByIdOrElseThrow(id);
-
-        if (member == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자가 존재하지 않습니다.");
-        }
-
+        Member member = memberRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
         boolean isMatch = passwordEncoder.matches(dto.getPassword(), member.getPassword());
+
         if (!isMatch) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+            throw new IncorrectPasswordException();
         }
 
         member.updateUsername(dto.getUsername());
     }
 
+    @Transactional
     public void delete(Long id) {
-        Member member = memberRepository.findByIdOrElseThrow(id);
+        Member member = memberRepository.findById(id)
+                        .orElseThrow(UserNotFoundException::new);
+
         memberRepository.delete(member);
     }
 
     public MemberResponseDto authenticate(LoginRequestDto dto) {
-        Member member = memberRepository.findByEmailOrElseThrow(dto.getEmail());
-
+        Member member = memberRepository.findByEmail(dto.getEmail())
+                .orElseThrow(EmailNotFoundException::new);
         boolean isMatch = passwordEncoder.matches(dto.getPassword(), member.getPassword());
+
         if (!isMatch) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+            throw new IncorrectPasswordException();
         }
 
         return new MemberResponseDto(member);
