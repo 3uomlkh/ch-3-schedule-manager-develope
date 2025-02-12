@@ -34,6 +34,11 @@ public class CommentController {
     }
 
     // 댓글 조회
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<CommentResponseDto>> findAll(@PathVariable Long id) {
+        List<CommentResponseDto> commentResponseDtos = commnetService.findAll(id);
+        return new ResponseEntity<>(commentResponseDtos, HttpStatus.OK);
+    }
 
     // 댓글 수정
 
