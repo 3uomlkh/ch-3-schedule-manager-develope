@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentService commnetService;
     private final CommentService commentService;
 
     // 댓글 생성
@@ -29,14 +28,14 @@ public class CommentController {
 
         HttpSession session = request.getSession(false);
         String email = (String) session.getAttribute("sessionKey");
-        CommentResponseDto commentResponseDto = commnetService.save(id, email, dto);
+        CommentResponseDto commentResponseDto = commentService.save(id, email, dto);
         return new ResponseEntity<>(commentResponseDto, HttpStatus.CREATED);
     }
 
     // 댓글 조회
     @GetMapping("/schedules/{id}/comments")
     public ResponseEntity<List<CommentResponseDto>> findAll(@PathVariable Long id) {
-        List<CommentResponseDto> commentResponseDtos = commnetService.findAll(id);
+        List<CommentResponseDto> commentResponseDtos = commentService.findAll(id);
         return new ResponseEntity<>(commentResponseDtos, HttpStatus.OK);
     }
 
@@ -51,4 +50,9 @@ public class CommentController {
     }
 
     // 댓글 삭제
+    @DeleteMapping("/comments/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        commentService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

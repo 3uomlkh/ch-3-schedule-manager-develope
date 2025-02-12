@@ -62,4 +62,11 @@ public class CommentService {
         comment.updateContents(dto.getContents());
         return new CommentResponseDto(comment);
     }
+
+    @Transactional
+    public void delete(Long id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("댓글을 찾을 수 없습니다. id = " + id));
+        commentRepository.delete(comment);
+    }
 }
