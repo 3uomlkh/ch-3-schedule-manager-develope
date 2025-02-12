@@ -34,6 +34,7 @@ public class ScheduleService {
         Member member = memberRepository.findByEmail(sessionKey)
                 .orElseThrow(SessionNotFoundException::new);
 
+        // 새로운 일정 생성 및 저장
         Schedule schedule = new Schedule(dto.getTitle(), dto.getContents());
         schedule.setMember(member);
         Schedule savedSchedule = scheduleRepository.save(schedule);
@@ -42,6 +43,7 @@ public class ScheduleService {
     }
 
     public List<ScheduleResponseDto> findAll() {
+        // 모든 일정 목록 조회 (없으면 빈 리스트 반환)
         return scheduleRepository.findAll()
                 .stream()
                 .map(ScheduleResponseDto::of)
@@ -49,11 +51,13 @@ public class ScheduleService {
     }
 
     public Page<PagedScheduleResponseDto> findAllWithPagination(Pageable pageable) {
+        // 페이지네이션을 적용하여 일정 목록 조회
         return scheduleRepository.findAll(pageable)
                 .map(PagedScheduleResponseDto::of);
     }
 
     public ScheduleResponseDto findById(Long id) {
+        // ID로 일정 조회 (없으면 예외 발생)
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(ScheduleNotFoundException::new);
 
@@ -62,6 +66,7 @@ public class ScheduleService {
 
     @Transactional
     public void delete(Long id) {
+        // ID로 일정 조회 후 삭제 (없으면 예외 발생)
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(ScheduleNotFoundException::new);
 
@@ -70,6 +75,7 @@ public class ScheduleService {
 
     @Transactional
     public void update(Long id, UpdateScheduleRequestDto dto) {
+        // ID로 일정 조회 (없으면 예외 발생)
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(ScheduleNotFoundException::new);
 
@@ -79,12 +85,12 @@ public class ScheduleService {
             throw new IncorrectPasswordException();
         }
 
-        // 일정 제목 수정
+        // 일정 제목이 있으면 제목 수정
         if (!(dto.getTitle() == null) && !dto.getTitle().isEmpty()) {
             schedule.updateTitle(dto.getTitle());
         }
 
-        // 일정 내용 수정
+        // 일정 내용이 있으면 내용 수정
         if (dto.getContents() != null && !dto.getContents().isEmpty()) {
             schedule.updateContents(dto.getContents());
         }

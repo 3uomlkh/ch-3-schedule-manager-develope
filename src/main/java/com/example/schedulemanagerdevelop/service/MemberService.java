@@ -29,6 +29,7 @@ public class MemberService {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
 
+        // 새로운 유저 생성 및 저장
         Member member = new Member(dto.getUsername(), dto.getEmail(), encodedPassword);
         Member savedMember = memberRepository.save(member);
 
@@ -36,6 +37,7 @@ public class MemberService {
     }
 
     public MemberResponseDto findById(Long id) {
+        // ID로 회원 조회 (없으면 예외 발생)
         Member member = memberRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
 
@@ -44,14 +46,17 @@ public class MemberService {
 
     @Transactional
     public void updatePassword(Long id, UpdatePasswordRequestDto dto) {
+        // ID로 회원 조회 (없으면 예외 발생)
         Member member = memberRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
-        boolean isMatch = passwordEncoder.matches(dto.getOldPassword(), member.getPassword());
 
+        // 기존 비밀번호 일치 여부 확인
+        boolean isMatch = passwordEncoder.matches(dto.getOldPassword(), member.getPassword());
         if (!isMatch) {
             throw new IncorrectPasswordException();
         }
 
+        // 새 비밀번호 암호화 후 업데이트
         member.updatePassword(passwordEncoder.encode(dto.getNewPassword()));
     }
 
@@ -59,8 +64,9 @@ public class MemberService {
     public void updateUsername(Long id, UpdateUsernameRequestDto dto) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
-        boolean isMatch = passwordEncoder.matches(dto.getPassword(), member.getPassword());
 
+        // 비밀번호 검증 후 유저 이름 변경
+        boolean isMatch = passwordEncoder.matches(dto.getPassword(), member.getPassword());
         if (!isMatch) {
             throw new IncorrectPasswordException();
         }
@@ -70,6 +76,7 @@ public class MemberService {
 
     @Transactional
     public void delete(Long id) {
+        // ID로 회원 조회 후 삭제 (없으면 예외 발생)
         Member member = memberRepository.findById(id)
                         .orElseThrow(UserNotFoundException::new);
 
@@ -77,10 +84,13 @@ public class MemberService {
     }
 
     public MemberResponseDto authenticate(LoginRequestDto dto) {
+        // 이메일로 회원 조회 (없으면 예외 발생)
         Member member = memberRepository.findByEmail(dto.getEmail())
                 .orElseThrow(EmailNotFoundException::new);
 
-        if (!passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
+        // 비밀번호 검증
+        boolean isMatch = passwordEncoder.matches(dto.getPassword(), member.getPassword());
+        if (!isMatch) {
             throw new IncorrectPasswordException();
         }
 

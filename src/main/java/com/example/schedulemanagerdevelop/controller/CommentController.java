@@ -25,21 +25,21 @@ public class CommentController {
             @RequestBody CommentRequestDto dto,
             HttpServletRequest request
     ) {
-
+        // 현재 로그인 된 유저의 세션키 가져오기
         HttpSession session = request.getSession(false);
-        String email = (String) session.getAttribute("sessionKey");
-        CommentResponseDto commentResponseDto = commentService.save(id, email, dto);
+        String sessionKey = (String) session.getAttribute("sessionKey");
+
+        CommentResponseDto commentResponseDto = commentService.save(id, sessionKey, dto);
         return new ResponseEntity<>(commentResponseDto, HttpStatus.CREATED);
     }
 
-    // 댓글 조회
+    // 특정 일정의 모든 댓글 조회
     @GetMapping("/schedules/{id}/comments")
     public ResponseEntity<List<CommentResponseDto>> findAll(@PathVariable Long id) {
         List<CommentResponseDto> commentResponseDtos = commentService.findAll(id);
         return new ResponseEntity<>(commentResponseDtos, HttpStatus.OK);
     }
 
-    // 댓글 수정
     @PatchMapping("/comments/{id}")
     public ResponseEntity<CommentResponseDto> update(
             @PathVariable Long id,
@@ -49,7 +49,6 @@ public class CommentController {
         return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
     }
 
-    // 댓글 삭제
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         commentService.delete(id);
