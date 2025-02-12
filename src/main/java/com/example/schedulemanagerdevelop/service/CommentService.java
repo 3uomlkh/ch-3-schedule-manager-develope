@@ -8,6 +8,7 @@ import com.example.schedulemanagerdevelop.entity.Schedule;
 import com.example.schedulemanagerdevelop.repository.CommentRepository;
 import com.example.schedulemanagerdevelop.repository.MemberRepository;
 import com.example.schedulemanagerdevelop.repository.ScheduleRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -54,4 +55,11 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public CommentResponseDto update(Long id, CommentRequestDto dto) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("댓글을 찾을 수 없습니다. id = " + id));
+        comment.updateContents(dto.getContents());
+        return new CommentResponseDto(comment);
+    }
 }

@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/schedules")
 @RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commnetService;
+    private final CommentService commentService;
 
     // 댓글 생성
-    @PostMapping("/{id}/comments")
+    @PostMapping("/schedules/{id}/comments")
     public ResponseEntity<CommentResponseDto> save(
             @PathVariable Long id,
             @RequestBody CommentRequestDto dto,
@@ -34,13 +34,21 @@ public class CommentController {
     }
 
     // 댓글 조회
-    @GetMapping("/{id}/comments")
+    @GetMapping("/schedules/{id}/comments")
     public ResponseEntity<List<CommentResponseDto>> findAll(@PathVariable Long id) {
         List<CommentResponseDto> commentResponseDtos = commnetService.findAll(id);
         return new ResponseEntity<>(commentResponseDtos, HttpStatus.OK);
     }
 
     // 댓글 수정
+    @PatchMapping("/comments/{id}")
+    public ResponseEntity<CommentResponseDto> update(
+            @PathVariable Long id,
+            @RequestBody CommentRequestDto dto
+    ) {
+        CommentResponseDto commentResponseDto = commentService.update(id, dto);
+        return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
+    }
 
     // 댓글 삭제
 }
