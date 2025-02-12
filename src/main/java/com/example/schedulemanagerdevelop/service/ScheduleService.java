@@ -2,20 +2,21 @@ package com.example.schedulemanagerdevelop.service;
 
 import com.example.schedulemanagerdevelop.config.PasswordEncoder;
 import com.example.schedulemanagerdevelop.dto.request.CreateScheduleRequestDto;
+import com.example.schedulemanagerdevelop.dto.request.UpdateScheduleRequestDto;
 import com.example.schedulemanagerdevelop.dto.response.PagedScheduleResponseDto;
 import com.example.schedulemanagerdevelop.dto.response.ScheduleResponseDto;
-import com.example.schedulemanagerdevelop.dto.request.UpdateScheduleRequestDto;
 import com.example.schedulemanagerdevelop.entity.Member;
 import com.example.schedulemanagerdevelop.entity.Schedule;
+import com.example.schedulemanagerdevelop.exception.custom.IncorrectPasswordException;
+import com.example.schedulemanagerdevelop.exception.custom.ScheduleNotFoundException;
+import com.example.schedulemanagerdevelop.exception.custom.SessionNotFoundException;
 import com.example.schedulemanagerdevelop.repository.MemberRepository;
 import com.example.schedulemanagerdevelop.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -28,7 +29,8 @@ public class ScheduleService {
     private final PasswordEncoder passwordEncoder;
 
     public ScheduleResponseDto save(CreateScheduleRequestDto dto, String sessionKey) {
-        Member member = memberRepository.findByEmailOrElseThrow(sessionKey);
+        Member member = memberRepository.findByEmail(sessionKey)
+                .orElseThrow(SessionNotFoundException::new);
 
         Schedule schedule = new Schedule(dto.getTitle(), dto.getContents());
         schedule.setMember(member);
@@ -50,22 +52,27 @@ public class ScheduleService {
     }
 
     public ScheduleResponseDto findbyId(Long id) {
-        Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(ScheduleNotFoundException::new);
+
         return new ScheduleResponseDto(schedule.getId(), schedule.getTitle(), schedule.getContents());
     }
 
     public void delete(Long id) {
-        Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(ScheduleNotFoundException::new);
         scheduleRepository.delete(schedule);
     }
 
     @Transactional
     public void update(Long id, UpdateScheduleRequestDto dto) {
-        Schedule schedule = scheduleRepository.findByIdOrElseThrow(id);
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(ScheduleNotFoundException::new);
+
         // 비밀번호 검증
         boolean isMatch = passwordEncoder.matches(dto.getPassword(), schedule.getMember().getPassword());
         if (!isMatch) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+            throw new IncorrectPasswordException();
         }
 
         // 일정 제목 수정
