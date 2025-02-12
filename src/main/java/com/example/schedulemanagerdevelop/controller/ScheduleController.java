@@ -45,8 +45,8 @@ public class ScheduleController {
 
     @GetMapping("/paged")
     public ResponseEntity<Page<PagedScheduleResponseDto>> findAllWithPagination(
-            @RequestParam int page,
-            @RequestParam int size
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
         Page<PagedScheduleResponseDto> pagedScheduleResponseDto = scheduleService.findAllWithPagination(pageable);
