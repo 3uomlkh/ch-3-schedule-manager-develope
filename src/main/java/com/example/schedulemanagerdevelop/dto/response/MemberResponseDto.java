@@ -8,8 +8,15 @@ public class MemberResponseDto {
     private final String username;
     private final String email;
 
-    public MemberResponseDto(Member member) {
-        this.username = member.getUsername();
-        this.email = member.getEmail();
+    public MemberResponseDto(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+
+    public static MemberResponseDto of(Member member) {
+        return new MemberResponseDto(
+                member.getUsername(),
+                member.getEmail()
+        );
     }
 }

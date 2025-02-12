@@ -32,14 +32,14 @@ public class MemberService {
         Member member = new Member(dto.getUsername(), dto.getEmail(), encodedPassword);
         Member savedMember = memberRepository.save(member);
 
-        return new SignUpResponseDto(savedMember);
+        return SignUpResponseDto.of(savedMember);
     }
 
     public MemberResponseDto findById(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
 
-        return new MemberResponseDto(member);
+        return MemberResponseDto.of(member);
     }
 
     @Transactional
@@ -79,12 +79,12 @@ public class MemberService {
     public MemberResponseDto authenticate(LoginRequestDto dto) {
         Member member = memberRepository.findByEmail(dto.getEmail())
                 .orElseThrow(EmailNotFoundException::new);
-        boolean isMatch = passwordEncoder.matches(dto.getPassword(), member.getPassword());
 
-        if (!isMatch) {
+        if (!passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
             throw new IncorrectPasswordException();
         }
 
-        return new MemberResponseDto(member);
+        return MemberResponseDto.of(member);
     }
+
 }

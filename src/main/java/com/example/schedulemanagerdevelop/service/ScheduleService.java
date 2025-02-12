@@ -38,32 +38,33 @@ public class ScheduleService {
         schedule.setMember(member);
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
-        return new ScheduleResponseDto(savedSchedule.getId(), savedSchedule.getTitle(), savedSchedule.getContents());
+        return ScheduleResponseDto.of(savedSchedule);
     }
 
     public List<ScheduleResponseDto> findAll() {
         return scheduleRepository.findAll()
                 .stream()
-                .map(ScheduleResponseDto::toDto)
+                .map(ScheduleResponseDto::of)
                 .toList();
     }
 
     public Page<PagedScheduleResponseDto> findAllWithPagination(Pageable pageable) {
         return scheduleRepository.findAll(pageable)
-                .map(PagedScheduleResponseDto::toDto);
+                .map(PagedScheduleResponseDto::of);
     }
 
-    public ScheduleResponseDto findbyId(Long id) {
+    public ScheduleResponseDto findById(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(ScheduleNotFoundException::new);
 
-        return new ScheduleResponseDto(schedule.getId(), schedule.getTitle(), schedule.getContents());
+        return ScheduleResponseDto.of(schedule);
     }
 
     @Transactional
     public void delete(Long id) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(ScheduleNotFoundException::new);
+
         scheduleRepository.delete(schedule);
     }
 

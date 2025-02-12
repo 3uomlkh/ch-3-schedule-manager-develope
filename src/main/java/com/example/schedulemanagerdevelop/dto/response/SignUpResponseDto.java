@@ -9,9 +9,17 @@ public class SignUpResponseDto {
     private final String username;
     private final String email;
 
-    public SignUpResponseDto(Member member) {
-        this.id = member.getId();
-        this.username = member.getUsername();
-        this.email = member.getEmail();
+    public SignUpResponseDto(Long id, String username, String email) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+    }
+
+    public static SignUpResponseDto of(Member member) {
+        return new SignUpResponseDto(
+                member.getId(),
+                member.getUsername(),
+                member.getEmail()
+        );
     }
 }

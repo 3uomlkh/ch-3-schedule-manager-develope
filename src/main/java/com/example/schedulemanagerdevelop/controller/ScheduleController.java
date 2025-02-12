@@ -55,7 +55,7 @@ public class ScheduleController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> findById(@PathVariable Long id) {
-        ScheduleResponseDto scheduleResponseDto = scheduleService.findbyId(id);
+        ScheduleResponseDto scheduleResponseDto = scheduleService.findById(id);
         return new ResponseEntity<>(scheduleResponseDto, HttpStatus.OK);
     }
 

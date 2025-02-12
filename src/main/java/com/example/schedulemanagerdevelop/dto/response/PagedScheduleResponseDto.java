@@ -23,7 +23,7 @@ public class PagedScheduleResponseDto {
         this.username = username;
     }
 
-    public static PagedScheduleResponseDto toDto(Schedule schedule) {
+    public static PagedScheduleResponseDto of(Schedule schedule) {
         return new PagedScheduleResponseDto(
                 schedule.getTitle(),
                 schedule.getContents(),
@@ -33,5 +33,4 @@ public class PagedScheduleResponseDto {
                 schedule.getMember().getUsername()
         );
     }
-
 }

@@ -37,14 +37,14 @@ public class CommentService {
 
         Comment savedComment = commentRepository.save(comment);
 
-        return new CommentResponseDto(savedComment);
+        return CommentResponseDto.of(savedComment);
     }
 
     public List<CommentResponseDto> findAll(Long id) {
         List<Comment> comments = commentRepository.findByScheduleId(id);
 
         return comments.stream()
-                .map(CommentResponseDto::new)
+                .map(CommentResponseDto::of)
                 .collect(Collectors.toList());
     }
 
@@ -55,7 +55,7 @@ public class CommentService {
 
         comment.updateContents(dto.getContents());
 
-        return new CommentResponseDto(comment);
+        return CommentResponseDto.of(comment);
     }
 
     @Transactional

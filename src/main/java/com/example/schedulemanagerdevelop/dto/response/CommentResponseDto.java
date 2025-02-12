@@ -13,11 +13,21 @@ public class CommentResponseDto {
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    public CommentResponseDto(Comment comment) {
-        this.id = comment.getId();
-        this.contents = comment.getContents();
-        this.memberName = comment.getMember().getUsername();
-        this.createdAt = comment.getCreatedAt();
-        this.modifiedAt = comment.getModifiedAt();
+    public CommentResponseDto(Long id, String contents, String memberName, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.id = id;
+        this.contents = contents;
+        this.memberName = memberName;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+    }
+
+    public static CommentResponseDto of(Comment comment) {
+        return new CommentResponseDto(
+                comment.getId(),
+                comment.getContents(),
+                comment.getMember().getUsername(),
+                comment.getCreatedAt(),
+                comment.getModifiedAt()
+        );
     }
 }
