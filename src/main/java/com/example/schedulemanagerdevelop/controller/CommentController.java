@@ -43,15 +43,27 @@ public class CommentController {
     @PatchMapping("/comments/{id}")
     public ResponseEntity<CommentResponseDto> update(
             @PathVariable Long id,
-            @RequestBody CommentRequestDto dto
+            @RequestBody CommentRequestDto dto,
+            HttpServletRequest request
     ) {
-        CommentResponseDto commentResponseDto = commentService.update(id, dto);
+        // 현재 로그인 된 유저의 세션키 가져오기
+        HttpSession session = request.getSession(false);
+        String sessionKey = (String) session.getAttribute("sessionKey");
+
+        CommentResponseDto commentResponseDto = commentService.update(id, dto, sessionKey);
         return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/comments/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        commentService.delete(id);
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id,
+            HttpServletRequest request
+    ) {
+        // 현재 로그인 된 유저의 세션키 가져오기
+        HttpSession session = request.getSession(false);
+        String sessionKey = (String) session.getAttribute("sessionKey");
+
+        commentService.delete(id, sessionKey);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

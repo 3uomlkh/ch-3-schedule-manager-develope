@@ -51,22 +51,31 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto update(Long id, CommentRequestDto dto) {
+    public CommentResponseDto update(Long id, CommentRequestDto dto, String sessionKey) {
         // ID로 댓글 조회 (없으면 예외 발생)
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
 
-        // 특정 댓글 내용 수정
+        // 같은 유저인지 세션키로 확인 후 수정
+        if (!comment.getMember().getEmail().equals(sessionKey)) {
+            throw new SessionNotFoundException();
+        }
+
         comment.updateContents(dto.getContents());
 
         return CommentResponseDto.of(comment);
     }
 
     @Transactional
-    public void delete(Long id) {
-        // ID로 일정 조회 후 삭제 (없으면 예외 발생)
+    public void delete(Long id, String sessionKey) {
+        // ID로 일정 조회 (없으면 예외 발생)
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
+
+        // 같은 유저인지 세션키로 확인 후 삭제
+        if (!comment.getMember().getEmail().equals(sessionKey)) {
+            throw new SessionNotFoundException();
+        }
 
         commentRepository.delete(comment);
     }
