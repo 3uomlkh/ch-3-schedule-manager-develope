@@ -52,7 +52,7 @@ public class MemberService {
             throw new IncorrectPasswordException();
         }
 
-        member.updatePassword(dto.getNewPassword());
+        member.updatePassword(passwordEncoder.encode(dto.getNewPassword()));
     }
 
     @Transactional
