@@ -27,8 +27,8 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ScheduleResponseDto save(CreateScheduleRequestDto dto) {
-        Member member = memberRepository.findMemberByUsernameOrElseThrow(dto.getUsername());
+    public ScheduleResponseDto save(CreateScheduleRequestDto dto, String sessionKey) {
+        Member member = memberRepository.findByEmailOrElseThrow(sessionKey);
 
         Schedule schedule = new Schedule(dto.getTitle(), dto.getContents());
         schedule.setMember(member);

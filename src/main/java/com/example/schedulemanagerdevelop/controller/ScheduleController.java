@@ -5,6 +5,8 @@ import com.example.schedulemanagerdevelop.dto.PagedScheduleResponseDto;
 import com.example.schedulemanagerdevelop.dto.ScheduleResponseDto;
 import com.example.schedulemanagerdevelop.dto.UpdateScheduleRequestDto;
 import com.example.schedulemanagerdevelop.service.ScheduleService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,8 +26,14 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> save(@Valid @RequestBody CreateScheduleRequestDto dto) {
-        ScheduleResponseDto scheduleResponseDto = scheduleService.save(dto);
+    public ResponseEntity<ScheduleResponseDto> save(
+            @Valid @RequestBody CreateScheduleRequestDto dto,
+            HttpServletRequest request
+    ) {
+        HttpSession session = request.getSession(false);
+        String sessionKey = (String) session.getAttribute("sessionKey");
+
+        ScheduleResponseDto scheduleResponseDto = scheduleService.save(dto, sessionKey);
         return new ResponseEntity<>(scheduleResponseDto, HttpStatus.OK);
     }
 

@@ -7,9 +7,6 @@ import lombok.Getter;
 @Getter
 public class CreateScheduleRequestDto {
 
-    @NotBlank(message = "이름은 필수값입니다.")
-    private final String username;
-
     @NotBlank(message = "제목은 필수값입니다.")
     @Size(min = 1, max = 15, message = "제목은 15자 이내여야 합니다.")
     private final String title;
@@ -18,8 +15,7 @@ public class CreateScheduleRequestDto {
     @Size(min = 1, max = 100, message = "내용은 100자 이내여야 합니다.")
     private final String contents;
 
-    public CreateScheduleRequestDto(String username, String title, String contents) {
-        this.username = username;
+    public CreateScheduleRequestDto(String title, String contents) {
         this.title = title;
         this.contents = contents;
     }
