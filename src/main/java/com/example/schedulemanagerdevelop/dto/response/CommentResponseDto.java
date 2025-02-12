@@ -13,14 +13,6 @@ public class CommentResponseDto {
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    public CommentResponseDto(Long id, String contents, String username, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        this.id = id;
-        this.contents = contents;
-        this.memberName = username;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
-    }
-
     public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
         this.contents = comment.getContents();

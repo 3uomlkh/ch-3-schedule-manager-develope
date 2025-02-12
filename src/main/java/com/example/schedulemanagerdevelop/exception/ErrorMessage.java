@@ -9,7 +9,7 @@ public enum ErrorMessage {
     EMAIL_NOT_FOUND("해당 이메일을 사용하는 사용자를 찾을 수 없습니다."),
     INCORRECT_PASSWORD("비밀번호가 일치하지 않습니다."),
     COMMENT_CONTENTS_REQUIRED("댓글 내용은 필수 입력 사항입니다."),
-    NO_COMMENTS_FOUND("등록된 댓글이 없습니다.");
+    COMMENTS_NOT_FOUND("해당 댓글이 존재하지 않습니다.");
 
     private final String message;
 
