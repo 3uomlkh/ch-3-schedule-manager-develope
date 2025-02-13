@@ -34,7 +34,7 @@ public class ScheduleController {
         String sessionKey = (String) session.getAttribute("sessionKey");
 
         ScheduleResponseDto scheduleResponseDto = scheduleService.save(dto, sessionKey);
-        return new ResponseEntity<>(scheduleResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(scheduleResponseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
@@ -71,6 +71,6 @@ public class ScheduleController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         scheduleService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
