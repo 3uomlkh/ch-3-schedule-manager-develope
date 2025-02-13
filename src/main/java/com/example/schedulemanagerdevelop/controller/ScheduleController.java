@@ -30,6 +30,7 @@ public class ScheduleController {
             @Valid @RequestBody CreateScheduleRequestDto dto,
             HttpServletRequest request
     ) {
+        // 현재 로그인 된 유저의 세션키 가져오기
         HttpSession session = request.getSession(false);
         String sessionKey = (String) session.getAttribute("sessionKey");
 
@@ -48,6 +49,7 @@ public class ScheduleController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
+        // 일정 수정일 기준 내림차순 정렬
         PageRequest pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
         Page<PagedScheduleResponseDto> pagedScheduleResponseDto = scheduleService.findAllWithPagination(pageable);
         return new ResponseEntity<>(pagedScheduleResponseDto, HttpStatus.OK);
