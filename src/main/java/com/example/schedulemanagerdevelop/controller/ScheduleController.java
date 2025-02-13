@@ -62,9 +62,14 @@ public class ScheduleController {
     @PatchMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable Long id,
-            @Valid @RequestBody UpdateScheduleRequestDto dto
+            @Valid @RequestBody UpdateScheduleRequestDto dto,
+            HttpServletRequest request
     ) {
-       scheduleService.update(id, dto);
+        // 현재 로그인 된 유저의 세션키 가져오기
+        HttpSession session = request.getSession(false);
+        String sessionKey = (String) session.getAttribute("sessionKey");
+
+        scheduleService.update(id, dto, sessionKey);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

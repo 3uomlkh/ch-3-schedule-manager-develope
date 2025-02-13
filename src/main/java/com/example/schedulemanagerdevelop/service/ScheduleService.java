@@ -7,9 +7,9 @@ import com.example.schedulemanagerdevelop.dto.response.PagedScheduleResponseDto;
 import com.example.schedulemanagerdevelop.dto.response.ScheduleResponseDto;
 import com.example.schedulemanagerdevelop.entity.Member;
 import com.example.schedulemanagerdevelop.entity.Schedule;
-import com.example.schedulemanagerdevelop.exception.custom.IncorrectPasswordException;
 import com.example.schedulemanagerdevelop.exception.custom.ScheduleNotFoundException;
 import com.example.schedulemanagerdevelop.exception.custom.SessionNotFoundException;
+import com.example.schedulemanagerdevelop.exception.custom.UnauthorizedActionException;
 import com.example.schedulemanagerdevelop.repository.MemberRepository;
 import com.example.schedulemanagerdevelop.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -74,19 +74,18 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void update(Long id, UpdateScheduleRequestDto dto) {
+    public void update(Long id, UpdateScheduleRequestDto dto, String session) {
         // ID로 일정 조회 (없으면 예외 발생)
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(ScheduleNotFoundException::new);
 
-        // 비밀번호 검증
-        boolean isMatch = passwordEncoder.matches(dto.getPassword(), schedule.getMember().getPassword());
-        if (!isMatch) {
-            throw new IncorrectPasswordException();
+        // 일정 수정 권한 확인 (로그인한 사용자와 작성자가 일치하는지 검증)
+        if (!schedule.getMember().getEmail().equals(session)) {
+            throw new UnauthorizedActionException();
         }
 
         // 일정 제목이 있으면 제목 수정
-        if (!(dto.getTitle() == null) && !dto.getTitle().isEmpty()) {
+        if (dto.getTitle() != null && !dto.getTitle().isEmpty()) {
             schedule.updateTitle(dto.getTitle());
         }
 
