@@ -10,6 +10,7 @@ import com.example.schedulemanagerdevelop.dto.response.SignUpResponseDto;
 import com.example.schedulemanagerdevelop.entity.Member;
 import com.example.schedulemanagerdevelop.exception.custom.EmailNotFoundException;
 import com.example.schedulemanagerdevelop.exception.custom.IncorrectPasswordException;
+import com.example.schedulemanagerdevelop.exception.custom.SessionNotFoundException;
 import com.example.schedulemanagerdevelop.exception.custom.UserNotFoundException;
 import com.example.schedulemanagerdevelop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,10 +46,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void updatePassword(Long id, UpdatePasswordRequestDto dto) {
-        // ID로 회원 조회 (없으면 예외 발생)
-        Member member = memberRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
+    public void updatePassword(UpdatePasswordRequestDto dto, String session) {
+        Member member = memberRepository.findByEmail(session)
+                .orElseThrow(SessionNotFoundException::new);
 
         // 기존 비밀번호 일치 여부 확인
         boolean isMatch = passwordEncoder.matches(dto.getOldPassword(), member.getPassword());
@@ -61,15 +61,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateUsername(Long id, UpdateUsernameRequestDto dto) {
-        Member member = memberRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
-
-        // 비밀번호 검증 후 유저 이름 변경
-        boolean isMatch = passwordEncoder.matches(dto.getPassword(), member.getPassword());
-        if (!isMatch) {
-            throw new IncorrectPasswordException();
-        }
+    public void updateUsername(UpdateUsernameRequestDto dto, String session) {
+        Member member = memberRepository.findByEmail(session)
+                .orElseThrow(SessionNotFoundException::new);
 
         member.updateUsername(dto.getUsername());
     }

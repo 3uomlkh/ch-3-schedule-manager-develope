@@ -11,7 +11,4 @@ public class UpdateUsernameRequestDto {
     @Max(value = 8, message = "이름은 8자 이내여야 합니다.")
     private String username;
 
-    @NotBlank(message = "비밀번호는 필수값입니다.")
-    private String password;
-
 }
