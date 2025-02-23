@@ -1,7 +1,7 @@
 package com.example.schedulemanagerdevelop.controller;
 
+import com.example.schedulemanagerdevelop.consts.Const;
 import com.example.schedulemanagerdevelop.dto.request.LoginRequestDto;
-import com.example.schedulemanagerdevelop.dto.response.MemberResponseDto;
 import com.example.schedulemanagerdevelop.dto.request.SignUpRequestDto;
 import com.example.schedulemanagerdevelop.dto.response.SignUpResponseDto;
 import com.example.schedulemanagerdevelop.service.MemberService;
@@ -31,18 +31,18 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(
+    public ResponseEntity<String> login(
             @Valid @RequestBody LoginRequestDto dto,
             HttpServletRequest request
     ) {
         // 로그인 요청 처리 (이메일 및 비밀번호 검증)
-        MemberResponseDto memberResponseDto = memberService.authenticate(dto);
+        Long memberId = memberService.handleLogin(dto);
 
-        // 세션 생성 및 이메일로 생성한 세션키 저장
-        HttpSession session = request.getSession(true);
-        session.setAttribute("sessionKey", memberResponseDto.getEmail());
+        // 신규 세션 생성, JSESSIONID 쿠키 발급
+        HttpSession session = request.getSession();
+        session.setAttribute(Const.LOGIN_USER, memberId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok("로그인 성공");
     }
 
     @PostMapping("/logout")

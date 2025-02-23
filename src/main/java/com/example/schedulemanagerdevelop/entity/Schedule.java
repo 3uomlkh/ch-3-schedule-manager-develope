@@ -20,8 +20,8 @@ public class Schedule extends BaseEntity {
     private Long id;
 
     @Setter
-    @ManyToOne
-    @JoinColumn(name = "member_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Column(nullable = false)

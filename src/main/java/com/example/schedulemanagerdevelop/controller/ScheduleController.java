@@ -1,12 +1,11 @@
 package com.example.schedulemanagerdevelop.controller;
 
+import com.example.schedulemanagerdevelop.consts.Const;
 import com.example.schedulemanagerdevelop.dto.request.CreateScheduleRequestDto;
+import com.example.schedulemanagerdevelop.dto.request.UpdateScheduleRequestDto;
 import com.example.schedulemanagerdevelop.dto.response.PagedScheduleResponseDto;
 import com.example.schedulemanagerdevelop.dto.response.ScheduleResponseDto;
-import com.example.schedulemanagerdevelop.dto.request.UpdateScheduleRequestDto;
 import com.example.schedulemanagerdevelop.service.ScheduleService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,14 +26,10 @@ public class ScheduleController {
 
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> save(
-            @Valid @RequestBody CreateScheduleRequestDto dto,
-            HttpServletRequest request
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @Valid @RequestBody CreateScheduleRequestDto dto
     ) {
-        // 현재 로그인 된 유저의 세션키 가져오기
-        HttpSession session = request.getSession(false);
-        String sessionKey = (String) session.getAttribute("sessionKey");
-
-        ScheduleResponseDto scheduleResponseDto = scheduleService.save(dto, sessionKey);
+        ScheduleResponseDto scheduleResponseDto = scheduleService.save(dto, userId);
         return new ResponseEntity<>(scheduleResponseDto, HttpStatus.CREATED);
     }
 
@@ -63,15 +58,11 @@ public class ScheduleController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> update(
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
             @PathVariable Long id,
-            @Valid @RequestBody UpdateScheduleRequestDto dto,
-            HttpServletRequest request
+            @Valid @RequestBody UpdateScheduleRequestDto dto
     ) {
-        // 현재 로그인 된 유저의 세션키 가져오기
-        HttpSession session = request.getSession(false);
-        String sessionKey = (String) session.getAttribute("sessionKey");
-
-        scheduleService.update(id, dto, sessionKey);
+        scheduleService.update(userId, id, dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -91,4 +91,17 @@ public class MemberService {
         return MemberResponseDto.of(member);
     }
 
+    // 튜터님 코드
+    @Transactional(readOnly = true)
+    public Long handleLogin(LoginRequestDto dto) {
+        Member member = memberRepository.findByEmail(dto.getEmail())
+                .orElseThrow(EmailNotFoundException::new);
+
+        if (!passwordEncoder.matches(dto.getPassword(), member.getPassword())) {
+            throw new IncorrectPasswordException();
+        }
+
+        return member.getId();
+    }
+
 }

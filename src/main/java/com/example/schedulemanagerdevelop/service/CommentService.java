@@ -29,10 +29,10 @@ public class CommentService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public CommentResponseDto save(Long scheduleId, String sessionKey, CommentRequestDto dto) {
+    public CommentResponseDto save(Long userId, Long scheduleId, CommentRequestDto dto) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(ScheduleNotFoundException::new);
-        Member member = memberRepository.findByEmail(sessionKey)
+        Member member = memberRepository.findById(userId)
                 .orElseThrow(SessionNotFoundException::new);
         Comment comment = new Comment(dto.getContents(), member, schedule);
 
@@ -52,13 +52,13 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto update(Long id, CommentRequestDto dto, String sessionKey) {
+    public CommentResponseDto update(Long userId, Long commentId, CommentRequestDto dto) {
         // ID로 댓글 조회 (없으면 예외 발생)
-        Comment comment = commentRepository.findById(id)
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
         // 같은 유저인지 세션키로 확인 후 수정
-        if (!comment.getMember().getEmail().equals(sessionKey)) {
+        if (!comment.getMember().getId().equals(userId)) {
             throw new UnauthorizedActionException();
         }
 
@@ -68,13 +68,13 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(Long id, String sessionKey) {
+    public void delete(Long userId, Long commentId) {
         // ID로 일정 조회 (없으면 예외 발생)
-        Comment comment = commentRepository.findById(id)
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
         // 같은 유저인지 세션키로 확인 후 삭제
-        if (!comment.getMember().getEmail().equals(sessionKey)) {
+        if (!comment.getMember().getId().equals(userId)) {
             throw new UnauthorizedActionException();
         }
 

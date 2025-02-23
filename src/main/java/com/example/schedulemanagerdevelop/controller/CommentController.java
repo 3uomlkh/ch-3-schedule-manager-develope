@@ -1,10 +1,9 @@
 package com.example.schedulemanagerdevelop.controller;
 
+import com.example.schedulemanagerdevelop.consts.Const;
 import com.example.schedulemanagerdevelop.dto.request.CommentRequestDto;
 import com.example.schedulemanagerdevelop.dto.response.CommentResponseDto;
 import com.example.schedulemanagerdevelop.service.CommentService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,17 +19,13 @@ public class CommentController {
     private final CommentService commentService;
 
     // 댓글 생성
-    @PostMapping("/schedules/{id}/comments")
+    @PostMapping("/schedules/{scheduleId}/comments")
     public ResponseEntity<CommentResponseDto> save(
-            @PathVariable Long id,
-            @Valid @RequestBody CommentRequestDto dto,
-            HttpServletRequest request
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @PathVariable Long scheduleId,
+            @Valid @RequestBody CommentRequestDto dto
     ) {
-        // 현재 로그인 된 유저의 세션키 가져오기
-        HttpSession session = request.getSession(false);
-        String sessionKey = (String) session.getAttribute("sessionKey");
-
-        CommentResponseDto commentResponseDto = commentService.save(id, sessionKey, dto);
+        CommentResponseDto commentResponseDto = commentService.save(userId, scheduleId, dto);
         return new ResponseEntity<>(commentResponseDto, HttpStatus.CREATED);
     }
 
@@ -41,30 +36,22 @@ public class CommentController {
         return new ResponseEntity<>(commentResponseDtos, HttpStatus.OK);
     }
 
-    @PatchMapping("/comments/{id}")
+    @PatchMapping("/comments/{commentId}")
     public ResponseEntity<CommentResponseDto> update(
-            @PathVariable Long id,
-            @Valid @RequestBody CommentRequestDto dto,
-            HttpServletRequest request
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @PathVariable Long commentId,
+            @Valid @RequestBody CommentRequestDto dto
     ) {
-        // 현재 로그인 된 유저의 세션키 가져오기
-        HttpSession session = request.getSession(false);
-        String sessionKey = (String) session.getAttribute("sessionKey");
-
-        CommentResponseDto commentResponseDto = commentService.update(id, dto, sessionKey);
+        CommentResponseDto commentResponseDto = commentService.update(userId, commentId, dto);
         return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("/comments/{id}")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Void> delete(
-            @PathVariable Long id,
-            HttpServletRequest request
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @PathVariable Long commentId
     ) {
-        // 현재 로그인 된 유저의 세션키 가져오기
-        HttpSession session = request.getSession(false);
-        String sessionKey = (String) session.getAttribute("sessionKey");
-
-        commentService.delete(id, sessionKey);
+        commentService.delete(commentId, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

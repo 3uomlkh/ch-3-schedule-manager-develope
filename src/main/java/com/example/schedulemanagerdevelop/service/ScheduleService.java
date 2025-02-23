@@ -30,8 +30,8 @@ public class ScheduleService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public ScheduleResponseDto save(CreateScheduleRequestDto dto, String sessionKey) {
-        Member member = memberRepository.findByEmail(sessionKey)
+    public ScheduleResponseDto save(CreateScheduleRequestDto dto, Long userId) {
+        Member member = memberRepository.findById(userId)
                 .orElseThrow(SessionNotFoundException::new);
 
         // 새로운 일정 생성 및 저장
@@ -74,13 +74,13 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void update(Long id, UpdateScheduleRequestDto dto, String session) {
+    public void update(Long userId, Long scheduleId, UpdateScheduleRequestDto dto) {
         // ID로 일정 조회 (없으면 예외 발생)
-        Schedule schedule = scheduleRepository.findById(id)
+        Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(ScheduleNotFoundException::new);
 
         // 일정 수정 권한 확인 (로그인한 사용자와 작성자가 일치하는지 검증)
-        if (!schedule.getMember().getEmail().equals(session)) {
+        if (!schedule.getMember().getId().equals(userId)) {
             throw new UnauthorizedActionException();
         }
 
